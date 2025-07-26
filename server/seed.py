@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-from app import app, db
-from models import Exercise, Workout, WorkoutExercise
+from server.app import app, db
+from server.models import Exercise, Workout, WorkoutExercise
 from datetime import date
 
 with app.app_context():

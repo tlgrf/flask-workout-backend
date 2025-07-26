@@ -1,11 +1,16 @@
-from flask import Flask, request, jsonify, make_response
+from flask import Flask, request, jsonify, make_response, abort
 from flask_migrate import Migrate
-from models import db, Exercise, Workout, WorkoutExercise
-from schemas import exercise_schema, exercises_schema, workout_schema, workouts_schema, we_schema
+from server.models import db, Exercise, Workout, WorkoutExercise
+from server.schemas import exercise_schema, exercises_schema, workout_schema, workouts_schema, we_schema
+from marshmallow import ValidationError
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+@app.errorhandler(ValidationError)
+def handle_marshmallow(err):
+    return {'errors': err.messages}, 400
 
 db.init_app(app)
 migrate = Migrate(app, db)
@@ -17,7 +22,7 @@ def get_exercises():
 
 @app.route('/exercises/<int:id>', methods=['GET'])
 def get_exercise(id):
-    ex = Exercise.query.get_or_404(id)
+    ex = db.session.get(Exercise, id) or abort(404)
     return jsonify(exercise_schema.dump(ex)), 200
 
 @app.route('/exercises', methods=['POST'])
