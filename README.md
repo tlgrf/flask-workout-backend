@@ -20,7 +20,7 @@ A RESTful API to track workouts and exercises using Flask, SQLAlchemy & Marshmal
 ## Installation  
 
 ```bash
-git clone <YOUR-REPO-URL>
+git clone <(https://github.com/tlgrf/flask-workout-backend)>
 cd flask-workout-backend
 pipenv install --dev
 pipenv shell
